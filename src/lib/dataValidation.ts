@@ -10203,3 +10203,5 @@ export const validateEventComment = (eventComment: any): boolean => {
 // Funcție pentru a valida datele unui like al unui eveniment
 export const validateEventLike = (eventLike: any): boolean => {
   if (!eventLike ||
+  )
+}
