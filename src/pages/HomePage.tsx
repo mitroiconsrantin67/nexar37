@@ -20,6 +20,7 @@ import {
 	Share2,
 } from "lucide-react";
 import { listings, romanianCities, supabase } from "../lib/supabase";
+import { ALLOWED_CATEGORIES } from "../lib/validations";
 
 const HomePage = () => {
 	const [searchParams] = useSearchParams();
@@ -52,7 +53,7 @@ const HomePage = () => {
 	}, [filters, searchQuery, currentPage]); // Dependencies are good here, triggering reload on filter/search/page change
 
 	// Update filters when URL params change
-useEffect(() => {
+	useEffect(() => {
 		const categoryFromUrl = searchParams.get("categorie");
 		if (categoryFromUrl) {
 			setFilters((prev) => ({ ...prev, category: categoryFromUrl }));
@@ -231,47 +232,7 @@ useEffect(() => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
-	const categories = [
-		{
-			name: "Sport",
-			image: "https://images.pexels.com/photos/595807/pexels-photo-595807.jpeg",
-		},
-		{
-			name: "Touring",
-			image:
-				"https://images.pexels.com/photos/2519374/pexels-photo-2519374.jpeg",
-		},
-		{
-			name: "Cruiser",
-			image:
-				"https://images.pexels.com/photos/1413412/pexels-photo-1413412.jpeg",
-		},
-		{
-			name: "Adventure",
-			image:
-				"https://images.pexels.com/photos/2611690/pexels-photo-2611690.jpeg",
-		},
-		{
-			name: "Naked",
-			image:
-				"https://images.pexels.com/photos/1715193/pexels-photo-1715193.jpeg",
-		},
-		{
-			name: "Enduro",
-			image:
-				"https://images.pexels.com/photos/2611690/pexels-photo-2611690.jpeg",
-		},
-		{
-			name: "Scooter",
-			image:
-				"https://i.bstr.es/drivingeco/2021/07/BMW-scooter-ec-04-55.jpg",
-		},
-		{
-			name: "Chopper",
-			image:
-				"https://images.pexels.com/photos/2393821/pexels-photo-2393821.jpeg",
-		},
-	];
+	const categories = ALLOWED_CATEGORIES;
 
 	const ListingRow = ({ listing }: { listing: any }) => {
 		const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -1261,7 +1222,7 @@ useEffect(() => {
 					</div>
 
 					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-						{categories.map((category, index) => (
+						{ALLOWED_CATEGORIES.map((category, index) => (
 							<Link
 								key={index}
 								to={`/?categorie=${category.name.toLowerCase()}`}

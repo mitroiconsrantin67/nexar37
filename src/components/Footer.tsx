@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from 'lucide-react';
+import { verifyFooterIntegrity } from '../lib/footerProtection';
 
 const Footer = () => {
   const navigate = useNavigate();
+  
+  // Verificăm integritatea footer-ului la montare
+  useEffect(() => {
+    verifyFooterIntegrity();
+  }, []);
   
   // Funcție pentru a asigura scroll la începutul paginii când se face click pe link-uri
   const handleLinkClick = () => {
@@ -246,7 +252,6 @@ const Footer = () => {
                 <div className="flex items-center space-x-2">
                   <span className="text-gray-400 text-sm font-bold tracking-wide group-hover:text-nexar-accent transition-all duration-500 group-hover:tracking-wider relative">
                     NEXT SOFT
-                    {/* Efect de underlining premium */}
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-nexar-accent group-hover:w-full transition-all duration-500 ease-out"></span>
                   </span>
                   <img 

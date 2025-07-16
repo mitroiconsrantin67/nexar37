@@ -2,31 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Store, Clock, Upload, X } from 'lucide-react';
+import { validateFeatures, validateBrand } from '../lib/dataValidation';
+import { ALLOWED_FEATURES, ALLOWED_BRANDS } from '../lib/validations';
 import SuccessModal from '../components/SuccessModal';
 
 // Lista de mărci de motociclete
-const motorcycleBrands = [
-  "Yamaha",
-  "Honda",
-  "Suzuki",
-  "Kawasaki",
-  "BMW",
-  "Ducati",
-  "KTM",
-  "Aprilia",
-  "Triumph",
-  "Harley-Davidson",
-  "MV Agusta",
-  "Benelli",
-  "Moto Guzzi",
-  "Indian",
-  "Zero",
-  "Energica",
-  "Husqvarna",
-  "Beta",
-  "Sherco",
-  "GasGas",
-];
+const motorcycleBrands = ALLOWED_BRANDS;
 
 const availabilityOptions = [
   {
@@ -214,10 +195,13 @@ const EditListingPage = () => {
   const handleFeatureToggle = (feature: string) => {
     setFormData(prev => ({
       ...prev,
-      features: prev.features.includes(feature)
+      features: prev.features?.includes(feature)
         ? prev.features.filter(f => f !== feature)
         : [...prev.features, feature]
     }));
+    
+    // Validăm noile dotări
+    validateFeatures(formData.features || []);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -228,6 +212,20 @@ const EditListingPage = () => {
     sessionStorage.setItem('isSubmittingListing', 'true');
     sessionStorage.setItem('submissionInProgress', 'true');
     setLoading(true);
+
+    // Validăm marca
+    if (!validateBrand(formData.brand)) {
+      alert('Marca nu este permisă');
+      setLoading(false);
+      return;
+    }
+
+    // Validăm dotările
+    if (formData.features?.length > 0 && !validateFeatures(formData.features)) {
+      alert('Una sau mai multe dotări nu sunt permise');
+      setLoading(false);
+      return;
+    }
     
     try {
       const { error } = await supabase
@@ -496,7 +494,7 @@ const EditListingPage = () => {
                 Caracteristici și accesorii
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {features.map(feature => (
+                {ALLOWED_FEATURES.map(feature => (
                   <label key={feature} className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
