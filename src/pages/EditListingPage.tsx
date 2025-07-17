@@ -276,6 +276,14 @@ const EditListingPage = () => {
     navigate(`/anunt/${id}`);
   };
 
+  const validateBrand = (brand: string) => {
+    return motorcycleBrands.includes(brand);
+  };
+
+  const validateFeatures = (features: string[]) => {
+    return features.every(feature => features.includes(feature));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -567,7 +575,29 @@ const EditListingPage = () => {
                 Anulează
               </button>
               <button
-const [motorcycleBrands, setMotorcycleBrands] = useState<string[]>([]);
                 type="submit"
-const [features, setFeatures] = useState<string[]>([]);
+                disabled={loading}
+                className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
+              >
+                {loading ? 'Se salvează...' : 'Salvează modificările'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {showSuccessModal && (
+        <SuccessModal
+          isOpen={showSuccessModal}
+          onClose={handleCloseSuccessModal}
+          onGoHome={handleGoHome}
+          onViewListing={handleViewListing}
+          title="Anunț actualizat cu succes!"
+          message="Anunțul tău a fost actualizat și va fi revizuit de echipa noastră înainte de a fi publicat."
+        />
+      )}
+    </div>
+  );
+};
+
 export default EditListingPage;
