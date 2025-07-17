@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from 'lucide-react';
 import { verifyFooterIntegrity } from '../lib/footerProtection';
@@ -9,7 +9,7 @@ const Footer = () => {
   const [footerSettings, setFooterSettings] = useState({
     developerText: 'Termeni',
     developerName: 'NEXT SOFT',
-    logoUrl: '/Next Soft Logo - ALB.png'
+    logoUrl: 'https://i.ibb.co/Qf9Vf3F/Next-Soft-Logo-ALB.png'
   });
   
   // Verificăm integritatea footer-ului la montare

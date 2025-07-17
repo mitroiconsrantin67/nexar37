@@ -3,33 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { Bike, Upload, X, AlertTriangle, Check, MapPin, Calendar, Gauge, Fuel, Settings, FileText, Euro, Camera, Plus, Minus } from 'lucide-react';
 import { listings, auth, romanianCities, supabase } from "../lib/supabase";
 import { getMotorcycleBrandNames, getMotorcycleFeatureNames } from "../lib/appData";
+import { getMotorcycleBrandNames, getMotorcycleFeatureNames } from "../lib/appData";
 import SuccessModal from '../components/SuccessModal';
 
 // Lista de mărci de motociclete
 const [motorcycleBrands, setMotorcycleBrands] = useState<string[]>([]);
 const [features, setFeatures] = useState<string[]>([]);
-
-interface FormData {
-	title: string;
-	price: string;
-	year: string;
-	mileage: string;
-	location: string;
-	category: string;
-	brand: string;
-	model: string;
-	engine_capacity: string;
-	fuel_type: string;
-	transmission: string;
-	condition: string;
-	color: string;
-	description: string;
-	features: string[];
-	availability: 'pe_stoc' | 'la_comanda';
-}
-
-interface FormErrors {
-	[key: string]: string;
 }
 
 const CreateListingPage: React.FC = () => {
@@ -62,6 +41,19 @@ const CreateListingPage: React.FC = () => {
 		availability: 'pe_stoc',
 		seller_type: 'individual' // Add seller_type to track the user's seller type
 	});
+
+	// Încărcăm mărcile și dotările din baza de date
+	useEffect(() => {
+		const loadData = async () => {
+			const brands = await getMotorcycleBrandNames();
+			const featuresList = await getMotorcycleFeatureNames();
+			
+			setMotorcycleBrands(brands);
+			setFeatures(featuresList);
+		};
+		
+		loadData();
+	}, []);
 
 	// Încărcăm mărcile și dotările din baza de date
 	useEffect(() => {

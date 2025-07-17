@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Store, Clock, Upload, X } from 'lucide-react';
-import { validateFeatures, validateBrand } from '../lib/dataValidation';
+import { getMotorcycleBrandNames, getMotorcycleFeatureNames } from '../lib/appData';
 import { getMotorcycleBrandNames, getMotorcycleFeatureNames } from '../lib/appData';
 import SuccessModal from '../components/SuccessModal';
 
@@ -48,6 +48,19 @@ const EditListingPage = () => {
   });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [imagesToRemove, setImagesToRemove] = useState<string[]>([]);
+
+  // Încărcăm mărcile și dotările din baza de date
+  useEffect(() => {
+    const loadData = async () => {
+      const brands = await getMotorcycleBrandNames();
+      const featuresList = await getMotorcycleFeatureNames();
+      
+      setMotorcycleBrands(brands);
+      setFeatures(featuresList);
+    };
+    
+    loadData();
+  }, []);
 
   // Încărcăm mărcile și dotările din baza de date
   useEffect(() => {
@@ -480,7 +493,7 @@ const EditListingPage = () => {
                 Caracteristici și accesorii
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {ALLOWED_FEATURES.map(feature => (
+                {features.map(feature => (
                   <label key={feature} className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
@@ -554,31 +567,7 @@ const EditListingPage = () => {
                 Anulează
               </button>
               <button
+const [motorcycleBrands, setMotorcycleBrands] = useState<string[]>([]);
                 type="submit"
-                disabled={loading}
-                className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
-              >
-                {loading ? 'Se salvează...' : 'Salvează modificările'}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      
-      {/* Success Modal */}
-      {showSuccessModal && (
-        <SuccessModal
-          isOpen={showSuccessModal}
-          onClose={handleCloseSuccessModal}
-          onGoHome={handleGoHome}
-          onViewListing={handleViewListing}
-          title="Modificări salvate!"
-          message="Modificările tale au fost trimise spre aprobare. Anunțul va fi actualizat după ce va fi revizuit de echipa noastră."
-          showViewButton={true}
-        />
-      )}
-    </div>
-  );
-};
-
+const [features, setFeatures] = useState<string[]>([]);
 export default EditListingPage;

@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { listings, romanianCities, supabase } from "../lib/supabase";
 import { getMotorcycleCategories } from "../lib/appData";
+import { getMotorcycleCategories } from "../lib/appData";
 
 const HomePage = () => {
 	const [searchParams] = useSearchParams();
@@ -46,12 +47,13 @@ const HomePage = () => {
 	const [userScrolled, setUserScrolled] = useState(false);
 	const navigate = useNavigate();
 	const [categories, setCategories] = useState<{ name: string, image: string }[]>([]);
-	const itemsPerPage = 10; // Show 10 listings per page
-
-	// Load real listings from Supabase
-	useEffect(() => {
-		loadListings();
-	}, [filters, searchQuery, currentPage]); // Dependencies are good here, triggering reload on filter/search/page change
+		const loadCategories = async () => {
+			const categoriesData = await getMotorcycleCategories();
+			setCategories(categoriesData);
+		};
+		
+		loadCategories();
+	}, []);
 
 	// Load categories from database
 	useEffect(() => {
