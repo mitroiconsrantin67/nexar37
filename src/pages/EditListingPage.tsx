@@ -579,7 +579,7 @@ const EditListingPage = () => {
                 disabled={loading}
                 className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
               >
-                {loading ? 'Se salvează...' : 'Salvează modificările'}
+                {loading ? 'Se actualizează...' : 'Actualizează anunțul'}
               </button>
             </div>
           </form>
