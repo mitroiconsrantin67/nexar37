@@ -84,5 +84,9 @@ export const ALLOWED_CATEGORIES = [
   {
     name: "Scooter",
     image: "https://images.pexels.com/photos/2393835/pexels-photo-2393835.jpeg",
+  },
+  {
+    name: "Chopper",
+    image: "https://images.pexels.com/photos/2393821/pexels-photo-2393821.jpeg",
   }
 ];

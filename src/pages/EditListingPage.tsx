@@ -3,11 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { Store, Clock, Upload, X } from 'lucide-react';
 import { validateFeatures, validateBrand } from '../lib/dataValidation';
-import { ALLOWED_FEATURES, ALLOWED_BRANDS } from '../lib/validations';
+import { getMotorcycleBrandNames, getMotorcycleFeatureNames } from '../lib/appData';
 import SuccessModal from '../components/SuccessModal';
 
 // Lista de mărci de motociclete
-const motorcycleBrands = ALLOWED_BRANDS;
+const [motorcycleBrands, setMotorcycleBrands] = useState<string[]>([]);
+const [features, setFeatures] = useState<string[]>([]);
 
 const availabilityOptions = [
   {
@@ -20,34 +21,6 @@ const availabilityOptions = [
     label: "La comandă",
     icon: Clock
   }
-];
-
-const features = [
-    "ABS (sistem antiblocare frâne)",
-    "Mansoane încălzite (TCS)",
-    "Parbriz",
-    "Șa încălzită",
-    "Mansoane încălzite",
-    "Pilot automat",
-    "Priză USB/12V",
-    "Genți laterale",
-    "Topcase",
-    "Crash bar",
-    "Suport telefon",
-    "Navigație",
-    "Bluetooth",
-    "Sistem audio",
-    "Keyless start",
-    "Quickshifter/blipper",
-    "TPMS",
-    "Antifurt",
-    "Imobilizator",
-    "Evacuare sport",
-    "Kit LED / DRL-uri personalizate",
-    "Handguards (apărători mâini)",
-    "Crash pads / frame sliders",
-    "Bare protecție motor",
-    "Scărițe reglabile"
 ];
 
 const EditListingPage = () => {
@@ -75,6 +48,19 @@ const EditListingPage = () => {
   });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [imagesToRemove, setImagesToRemove] = useState<string[]>([]);
+
+  // Încărcăm mărcile și dotările din baza de date
+  useEffect(() => {
+    const loadData = async () => {
+      const brands = await getMotorcycleBrandNames();
+      const featuresList = await getMotorcycleFeatureNames();
+      
+      setMotorcycleBrands(brands);
+      setFeatures(featuresList);
+    };
+    
+    loadData();
+  }, []);
 
   useEffect(() => {
     loadListing();

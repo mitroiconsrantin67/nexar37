@@ -1,35 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Bike, Upload, X, AlertTriangle, Check, MapPin, Calendar, Gauge, Fuel, Settings, FileText, Euro, Camera, Plus, Minus } from 'lucide-react';
-import { listings, auth, romanianCities, supabase } from '../lib/supabase';
+import { listings, auth, romanianCities, supabase } from "../lib/supabase";
+import { getMotorcycleBrandNames, getMotorcycleFeatureNames } from "../lib/appData";
 import SuccessModal from '../components/SuccessModal';
 
 // Lista de mărci de motociclete
-const motorcycleBrands = [
-	"Yamaha",
-	"Honda",
-	"Suzuki",
-	"Kawasaki",
-	"BMW",
-	"Ducati",
-	"KTM",
-	"Aprilia",
-	"Triumph",
-	"Harley-Davidson",
-	"MV Agusta",
-	"Benelli",
-	"Moto Guzzi",
-	"Indian",
-	"Zero",
-	"Energica",
-	"Husqvarna",
-	"Beta",
-	"Sherco",
-	"GasGas",
-	"CFMOTO",
-	"Kymco"
-	
-];
+const [motorcycleBrands, setMotorcycleBrands] = useState<string[]>([]);
+const [features, setFeatures] = useState<string[]>([]);
 
 interface FormData {
 	title: string;
@@ -84,6 +62,19 @@ const CreateListingPage: React.FC = () => {
 		availability: 'pe_stoc',
 		seller_type: 'individual' // Add seller_type to track the user's seller type
 	});
+
+	// Încărcăm mărcile și dotările din baza de date
+	useEffect(() => {
+		const loadData = async () => {
+			const brands = await getMotorcycleBrandNames();
+			const featuresList = await getMotorcycleFeatureNames();
+			
+			setMotorcycleBrands(brands);
+			setFeatures(featuresList);
+		};
+		
+		loadData();
+	}, []);
 
 	// Verificăm autentificarea la încărcarea componentei
 	useEffect(() => {
@@ -154,34 +145,6 @@ const CreateListingPage: React.FC = () => {
 		{ value: 'pe_stoc', label: 'Pe stoc' },
 		{ value: 'la_comanda', label: 'La comandă' }
 	];
-
-	const features = [
-		"ABS (sistem antiblocare frâne)",
-		"Mansoane încălzite",
-		"Parbriz",
-		"Șa încălzită",
-		"Pilot automat",
-		"Priză USB/12V",
-		"Genți laterale",
-		"Topcase",
-		"Crash bar",
-		"Suport telefon",
-		"Navigație",
-		"Bluetooth",
-		"Sistem audio",
-		"Keyless start",
-		"Quickshifter/blipper",
-		"TPMS",
-		"Antifurt",
-		"Imobilizator",
-		"Evacuare sport",
-		"Kit LED / DRL-uri personalizate",
-		"Handguards (apărători mâini)",
-		"Crash pads / frame sliders",
-		"Bare protecție motor",
-		"Scărițe reglabile"
-	];
-
 	const handleInputChange = (field: keyof FormData, value: string) => {
 		setFormData(prev => ({ ...prev, [field]: value }));
 		

@@ -20,7 +20,7 @@ import {
 	Share2,
 } from "lucide-react";
 import { listings, romanianCities, supabase } from "../lib/supabase";
-import { ALLOWED_CATEGORIES } from "../lib/validations";
+import { getMotorcycleCategories } from "../lib/appData";
 
 const HomePage = () => {
 	const [searchParams] = useSearchParams();
@@ -45,12 +45,23 @@ const HomePage = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [userScrolled, setUserScrolled] = useState(false);
 	const navigate = useNavigate();
+	const [categories, setCategories] = useState<{ name: string, image: string }[]>([]);
 	const itemsPerPage = 10; // Show 10 listings per page
 
 	// Load real listings from Supabase
 	useEffect(() => {
 		loadListings();
 	}, [filters, searchQuery, currentPage]); // Dependencies are good here, triggering reload on filter/search/page change
+
+	// Load categories from database
+	useEffect(() => {
+		const loadCategories = async () => {
+			const categoriesData = await getMotorcycleCategories();
+			setCategories(categoriesData);
+		};
+		
+		loadCategories();
+	}, []);
 
 	// Update filters when URL params change
 	useEffect(() => {
@@ -1222,7 +1233,7 @@ const HomePage = () => {
 					</div>
 
 					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-						{ALLOWED_CATEGORIES.map((category, index) => (
+						{categories.map((category, index) => (
 							<Link
 								key={index}
 								to={`/?categorie=${category.name.toLowerCase()}`}

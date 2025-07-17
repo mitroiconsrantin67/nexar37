@@ -2,13 +2,27 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook, Instagram, Clock } from 'lucide-react';
 import { verifyFooterIntegrity } from '../lib/footerProtection';
+import { getFooterSettings } from '../lib/appData';
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [footerSettings, setFooterSettings] = useState({
+    developerText: 'Termeni',
+    developerName: 'NEXT SOFT',
+    logoUrl: '/Next Soft Logo - ALB.png'
+  });
   
   // Verificăm integritatea footer-ului la montare
   useEffect(() => {
     verifyFooterIntegrity();
+    
+    // Încărcăm setările pentru footer din baza de date
+    const loadFooterSettings = async () => {
+      const settings = await getFooterSettings();
+      setFooterSettings(settings);
+    };
+    
+    loadFooterSettings();
   }, []);
   
   // Funcție pentru a asigura scroll la începutul paginii când se face click pe link-uri
@@ -247,16 +261,16 @@ const Footer = () => {
                 }}
               >
                 <span className="text-gray-400 text-sm group-hover:text-nexar-accent transition-all duration-500 group-hover:font-semibold">
-                  Dezvoltat de
+                  {footerSettings.developerText}
                 </span>
                 <div className="flex items-center space-x-2">
                   <span className="text-gray-400 text-sm font-bold tracking-wide group-hover:text-nexar-accent transition-all duration-500 group-hover:tracking-wider relative">
-                    NEXT SOFT
+                    {footerSettings.developerName}
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-nexar-accent group-hover:w-full transition-all duration-500 ease-out"></span>
                   </span>
                   <img 
                     loading="lazy"
-                    src="/Next Soft Logo - ALB.png" 
+                    src={footerSettings.logoUrl} 
                     alt="NEXT SOFT" 
                     className="h-12 w-12 sm:h-14 sm:w-14 object-contain opacity-70 group-hover:opacity-100 transition-all duration-500 transform-gpu"
                     style={{
