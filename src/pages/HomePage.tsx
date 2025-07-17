@@ -243,8 +243,6 @@ const HomePage = () => {
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	};
 
-	const categories = ALLOWED_CATEGORIES;
-
 	const ListingRow = ({ listing }: { listing: any }) => {
 		const [currentImageIndex, setCurrentImageIndex] = useState(0);
 		const touchStartX = useRef<number>(0);
