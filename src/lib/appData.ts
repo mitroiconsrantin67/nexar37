@@ -202,9 +202,9 @@ export const getFooterSettings = async (): Promise<{ developerText: string, deve
   const settings = await loadAppSettings();
   
   return {
-    developerText: settings.find(s => s.key === 'footer_developer_text')?.value || 'Dezvoltat de',
-    developerName: settings.find(s => s.key === 'footer_developer_name')?.value || 'NEXT SOFT',
-    logoUrl: settings.find(s => s.key === 'footer_logo_url')?.value || '/Next Soft Logo - ALB.png'
+    developerText: settings.find(s => s.key === 'footer_text_key')?.value || 'Termeni',
+    developerName: settings.find(s => s.key === 'footer_name_key')?.value || 'NEXT SOFT',
+    logoUrl: settings.find(s => s.key === 'footer_logo_url')?.value || 'https://i.ibb.co/Qf9Vf3F/Next-Soft-Logo-ALB.png'
   };
 };
 

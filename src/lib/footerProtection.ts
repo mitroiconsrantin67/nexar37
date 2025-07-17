@@ -10,7 +10,7 @@ export const verifyFooterIntegrity = async (): Promise<boolean> => {
     const { data: settings, error } = await supabase
       .from('app_settings')
       .select('*')
-      .in('key', ['footer_developer_text', 'footer_developer_name', 'footer_logo_url']);
+      .in('key', ['footer_text_key', 'footer_name_key', 'footer_logo_url']);
     
     if (error || !settings || settings.length < 3) {
       console.error('Eroare critică: Nu s-au putut încărca setările footer-ului!', error);
@@ -27,8 +27,8 @@ export const verifyFooterIntegrity = async (): Promise<boolean> => {
     }
 
     // Obținem valorile din setări
-    const developerText = settings.find(s => s.key === 'footer_developer_text')?.value;
-    const developerName = settings.find(s => s.key === 'footer_developer_name')?.value;
+    const developerText = settings.find(s => s.key === 'footer_text_key')?.value;
+    const developerName = settings.find(s => s.key === 'footer_name_key')?.value;
     const logoUrl = settings.find(s => s.key === 'footer_logo_url')?.value;
 
     // Verificăm dacă conține textul corect
@@ -175,69 +175,6 @@ export const deobfuscateCode = (code: string): string => {
   return atob(code.split('').reverse().join(''));
 };
 
-// Funcție pentru a verifica dacă o valoare este în lista de valori permise
-export const isValueAllowed = <T>(value: T, allowedValues: T[]): boolean => {
-  return allowedValues.includes(value);
-};
-
-// Funcție pentru a verifica dacă un obiect are toate proprietățile necesare
-export const hasRequiredProperties = (obj: any, requiredProps: string[]): boolean => {
-  return requiredProps.every(prop => obj.hasOwnProperty(prop));
-};
-
-// Funcție pentru a verifica dacă un obiect are doar proprietățile permise
-export const hasOnlyAllowedProperties = (obj: any, allowedProps: string[]): boolean => {
-  return Object.keys(obj).every(prop => allowedProps.includes(prop));
-};
-
-// Funcție pentru a verifica dacă un obiect are doar valorile permise pentru proprietățile sale
-export const hasOnlyAllowedValues = <T>(obj: Record<string, T>, allowedValues: Record<string, T[]>): boolean => {
-  return Object.entries(obj).every(([key, value]) => {
-    if (!allowedValues[key]) return false;
-    return allowedValues[key].includes(value);
-  });
-};
-
-// Funcție pentru a verifica dacă o imagine are URL-ul permis
-export const isImageUrlAllowed = (url: string, allowedUrls: string[]): boolean => {
-  return allowedUrls.some(allowedUrl => url.startsWith(allowedUrl));
-};
-
-// Funcție pentru a verifica dacă o categorie este validă
-export const isCategoryValid = (category: any, allowedCategories: any[]): boolean => {
-  if (!category || typeof category !== 'object') return false;
-  if (!category.name || !category.image) return false;
-  
-  return allowedCategories.some(
-    allowedCategory => 
-      allowedCategory.name === category.name && 
-      allowedCategory.image === category.image
-  );
-};
-
-// Funcție pentru a verifica dacă o listă de categorii este validă
-export const areCategoriesValid = (categories: any[], allowedCategories: any[]): boolean => {
-  if (!categories || !Array.isArray(categories)) return false;
-  if (categories.length !== allowedCategories.length) return false;
-  
-  return categories.every(category => isCategoryValid(category, allowedCategories));
-};
-
-// Funcție pentru a verifica dacă o listă de mărci este validă
-export const areBrandsValid = (brands: string[], allowedBrands: string[]): boolean => {
-  if (!brands || !Array.isArray(brands)) return false;
-  if (brands.length !== allowedBrands.length) return false;
-  
-  return brands.every(brand => allowedBrands.includes(brand));
-};
-
-// Funcție pentru a verifica dacă o listă de dotări este validă
-export const areFeaturesValid = (features: string[], allowedFeatures: string[]): boolean => {
-  if (!features || !Array.isArray(features)) return false;
-  
-  return features.every(feature => allowedFeatures.includes(feature));
-};
-
 // Inițializăm verificarea integrității la încărcarea paginii
 export const initIntegrityCheck = (): void => {
   // Verificăm integritatea la încărcarea paginii
@@ -252,15 +189,6 @@ export const initIntegrityCheck = (): void => {
   setInterval(async () => {
     await verifyFooterIntegrity();
   }, 60000 + Math.random() * 120000); // Între 1 și 3 minute
-};
-
-// Exportăm o funcție obfuscată pentru a face depanarea mai dificilă
-export const _nx_verify = async (): Promise<void> => {
-  try {
-    await verifyFooterIntegrity();
-  } catch (e) {
-    // Înghițim eroarea pentru a face depanarea mai dificilă
-  }
 };
 
 // Funcție pentru a verifica dacă aplicația a fost modificată
@@ -285,66 +213,6 @@ export const resetAppState = (): void => {
   } catch (e) {
     // Înghițim eroarea pentru a face depanarea mai dificilă
   }
-};
-
-// Exportăm o funcție obfuscată pentru a reseta starea aplicației
-export const _nx_reset = (): void => {
-  resetAppState();
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă o funcționalitate este dezactivată
-export const _nx_check = (feature: string): boolean => {
-  return isFeatureDisabled(feature);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă aplicația a fost modificată
-export const _nx_modified = (): boolean => {
-  return isAppModified();
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă o valoare este permisă
-export const _nx_allowed = <T>(value: T, allowedValues: T[]): boolean => {
-  return isValueAllowed(value, allowedValues);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă o categorie este validă
-export const _nx_category = (category: any, allowedCategories: any[]): boolean => {
-  return isCategoryValid(category, allowedCategories);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă o listă de categorii este validă
-export const _nx_categories = (categories: any[], allowedCategories: any[]): boolean => {
-  return areCategoriesValid(categories, allowedCategories);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă o listă de mărci este validă
-export const _nx_brands = (brands: string[], allowedBrands: string[]): boolean => {
-  return areBrandsValid(brands, allowedBrands);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă o listă de dotări este validă
-export const _nx_features = (features: string[], allowedFeatures: string[]): boolean => {
-  return areFeaturesValid(features, allowedFeatures);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă o imagine are URL-ul permis
-export const _nx_image = (url: string, allowedUrls: string[]): boolean => {
-  return isImageUrlAllowed(url, allowedUrls);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă un obiect are toate proprietățile necesare
-export const _nx_required = (obj: any, requiredProps: string[]): boolean => {
-  return hasRequiredProperties(obj, requiredProps);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă un obiect are doar proprietățile permise
-export const _nx_allowed_props = (obj: any, allowedProps: string[]): boolean => {
-  return hasOnlyAllowedProperties(obj, allowedProps);
-};
-
-// Exportăm o funcție obfuscată pentru a verifica dacă un obiect are doar valorile permise pentru proprietățile sale
-export const _nx_allowed_values = <T>(obj: Record<string, T>, allowedValues: Record<string, T[]>): boolean => {
-  return hasOnlyAllowedValues(obj, allowedValues);
 };
 
 // Inițializăm verificarea integrității
