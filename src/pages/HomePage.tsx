@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import { listings, romanianCities, supabase } from "../lib/supabase";
 import { getMotorcycleCategories } from "../lib/appData";
-import { getMotorcycleCategories } from "../lib/appData";
 
 const HomePage = () => {
 	const [searchParams] = useSearchParams();
@@ -47,6 +46,10 @@ const HomePage = () => {
 	const [userScrolled, setUserScrolled] = useState(false);
 	const navigate = useNavigate();
 	const [categories, setCategories] = useState<{ name: string, image: string }[]>([]);
+	const itemsPerPage = 10;
+
+	// Load categories from database
+	useEffect(() => {
 		const loadCategories = async () => {
 			const categoriesData = await getMotorcycleCategories();
 			setCategories(categoriesData);
@@ -73,6 +76,10 @@ const HomePage = () => {
 		}
 	}, [searchParams]);
 
+	// Load listings on component mount
+	useEffect(() => {
+		loadListings();
+	}, []);
 
 	// Track scroll position to prevent auto-hiding filters on mobile
 	useEffect(() => {
