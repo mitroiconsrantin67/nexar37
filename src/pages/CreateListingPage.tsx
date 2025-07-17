@@ -9,6 +9,29 @@ import SuccessModal from '../components/SuccessModal';
 // Lista de mărci de motociclete
 const [motorcycleBrands, setMotorcycleBrands] = useState<string[]>([]);
 const [features, setFeatures] = useState<string[]>([]);
+
+interface FormData {
+	title: string;
+	price: string;
+	year: string;
+	mileage: string;
+	location: string;
+	category: string;
+	brand: string;
+	model: string;
+	engine_capacity: string;
+	fuel_type: string;
+	transmission: string;
+	condition: string;
+	color: string;
+	description: string;
+	features: string[];
+	availability: string;
+	seller_type: string;
+}
+
+interface FormErrors {
+	[key: string]: string;
 }
 
 const CreateListingPage: React.FC = () => {
@@ -21,6 +44,8 @@ const CreateListingPage: React.FC = () => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [showSuccessModal, setShowSuccessModal] = useState(false);
 	const [createdListingId, setCreatedListingId] = useState<string | null>(null);
+	const [motorcycleBrands, setMotorcycleBrands] = useState<string[]>([]);
+	const [features, setFeatures] = useState<string[]>([]);
 
 	const [formData, setFormData] = useState<FormData>({
 		title: '',
@@ -88,7 +113,6 @@ const CreateListingPage: React.FC = () => {
 					
 				if (profileData) {
 					setFormData(prev => ({
-						...prev,
 						...prev,
 						seller_type: profileData.seller_type
 					}));
